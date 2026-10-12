@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pirajá · Painel de análise epidemiológica</title>
+  <meta name="description" content="Pirajá · Entero — transforma a planilha de coleta em relatório epidemiológico de parasitos intestinais: prevalência por paciente com IC 95%, comparação entre métodos, mapas e relatório em PDF e Excel. Tudo roda no seu navegador.">
+  <meta name="theme-color" content="#11483D">
+  <link rel="icon" href="brand/piraja-favicon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="brand/piraja-favicon.png" type="image/png">
+  <link rel="preload" href="brand/fonts/InstrumentSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="brand/fonts/Fraunces-SemiBold.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="css/piraja.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <button class="pj-menu" type="button" data-acao="menu" aria-controls="barra" aria-expanded="false">☰ Menu</button>
+
+  <aside class="pj-barra" id="barra" aria-label="Sobre o Pirajá">
+    <div class="marca"><img src="brand/piraja-entero-negativo.svg" alt="Pirajá Entero"></div>
+    <br>
+    <span class="pj-eyebrow">Fluxo de trabalho</span>
+    <ol>
+      <li><strong>01 · Baixe</strong> o modelo de planilha</li>
+      <li><strong>02 · Envie</strong> a planilha preenchida</li>
+      <li><strong>03 · Configure</strong> parasitos, métodos e amostras</li>
+      <li><strong>04 · Receba</strong> o relatório</li>
+    </ol>
+    <hr>
+    <button class="pj-btn" type="button" data-acao="baixar-modelo" data-icone="baixar-claro">Modelo (.xlsx)</button>
+    <hr>
+    <span class="pj-eyebrow">Sobre as amostras</span>
+    <p>Alguns dos métodos aceitos, por tipo de amostra:</p>
+    <p><strong>Pote de fezes</strong> → HPJ, Willis, Baermann-Picanço, Faust, Kato-Katz, MIFC, Ritchie, entre outros.</p>
+    <p><strong>Lâmina (swab)</strong> → Graham, entre outros.</p>
+    <p>Outros métodos também podem ser usados: basta incluir a coluna na planilha e indicar, no passo 03, se é de fezes ou de lâmina. A planilha não precisa trazer todos os métodos listados, só os que você usou.</p>
+    <hr>
+    <span class="pj-eyebrow">Classificação clínica</span>
+    <p>Você define no passo 03 se cada parasito é <strong>patogênico</strong> ou <strong>comensal</strong>. O sistema sugere uma classificação padrão — por exemplo, <em>Entamoeba histolytica/dispar</em> vem como patogênica, já que a diferenciação morfológica entre as duas formas não é possível no laboratório; <em>Blastocystis</em> vem sem classificação.</p>
+    <hr>
+    <div class="privado" data-icone="cadeado">
+      <p><strong>Seus dados ficam com você.</strong> A planilha é lida e analisada no seu próprio navegador — nada é enviado a um servidor.</p>
+    </div>
+  </aside>
+
+  <main class="pj-main" id="topo">
+    <header class="pj-topbar">
+      <h1 class="nome">Painel de análise epidemiológica</h1>
+      <div class="sub">Pirajá · Entero · parasitos intestinais</div>
+    </header>
+
+    <section class="pj-hero" id="hero">
+      <div>
+        <h2>Seus dados de coleta, transformados em relatório epidemiológico.</h2>
+        <p>Envie a planilha da coleta e receba a prevalência de parasitos intestinais por paciente, a comparação entre métodos, mapas por território e o relatório pronto em PDF e Excel.</p>
+      </div>
+    </section>
+
+    <section class="pj-como">
+      <span class="pj-eyebrow">Como funciona</span>
+      <div class="pj-etapas" id="etapas"></div>
+      <div class="pj-nota-amostra">
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="6.5" fill="none" stroke="#4E5B55" stroke-width="1.6" stroke-dasharray="2.4 2.4"/></svg>
+        <span>Amostras insuficientes nunca entram no cálculo como negativas: elas ficam fora do denominador.</span>
+      </div>
+    </section>
+
+    <section class="pj-passo" id="passo-1">
+      <div class="pj-step"><div class="badge">1</div><h2>Baixe o modelo de planilha</h2></div>
+      <p>Um arquivo .xlsx com as colunas certas, os valores aceitos em cada uma, a lista de espécies reconhecidas e uma linha de exemplo — para preencher com os dados da sua coleta. Traz uma coluna para cada método que o sistema reconhece; apague as que o seu laboratório não usa antes de enviar.</p>
+      <button class="pj-btn" type="button" data-acao="baixar-modelo" data-icone="baixar">Baixar modelo (.xlsx)</button>
+    </section>
+
+    <section class="pj-passo" id="passo-2">
+      <div class="pj-step"><div class="badge">2</div><h2>Envie a planilha preenchida</h2></div>
+      <p>Aceita o modelo baixado acima, preenchido com uma linha por coleta (P1, P2, P3...) de cada paciente. Não precisa conter todos os métodos do modelo — só os que o laboratório efetivamente utilizou. Se a planilha trouxer as abas de configuração (Config_*), elas já vêm aplicadas no passo seguinte.</p>
+      <label class="pj-drop" id="drop">
+        <input type="file" id="arquivo" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+        <span data-icone="upload"></span>
+        <strong>Arraste a planilha para cá ou clique para escolher</strong>
+        <small>.xlsx ou .xls · o arquivo é lido no seu navegador e não sai do seu computador</small>
+      </label>
+      <div class="pj-arquivo" id="arquivo-info" hidden></div>
+      <div id="msgs-arquivo"></div>
+    </section>
+
+    <div id="saida"></div>
+
+    <footer class="pj-rodape">
+      <p>Nota metodológica: a prevalência é calculada por paciente, não por exame — um paciente conta como positiva se qualquer uma de suas coletas (P1, P2, ... Pn) revelou o parasita. O pote de fezes alimenta os métodos de domínio fecal; a lâmina alimenta exclusivamente os métodos de domínio lâmina/swab. Crianças cujos únicos resultados foram 'Amostra insuficiente' são reportadas à parte como inconclusivas, e não entram nos denominadores de prevalência. Uma célula marcada 'Não realizado' é excluída por completo do denominador daquele método para aquela coleta. A planilha enviada não precisa trazer todos os métodos do modelo — o sistema detecta e analisa só os presentes.</p>
+      <p>Pirajá · LaPaHV — a análise roda inteiramente no navegador; nenhum dado da planilha é transmitido.</p>
+    </footer>
+  </main>
+
+  <div class="pj-dica" id="dica" hidden></div>
+  <noscript><div class="pj-toast">O Pirajá precisa de JavaScript ativado no navegador.</div></noscript>
+</body>
+</html>

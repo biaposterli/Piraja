@@ -1,0 +1,19 @@
+# Cabeçalhos HTTP para o Cloudflare Pages (e Netlify, que usa o mesmo formato).
+# A análise roda inteira no navegador: a página só carrega arquivos do próprio site
+# e nunca envia dados a lugar nenhum (connect-src 'self').
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+
+/geo/*
+  Cache-Control: public, max-age=2592000
+  Content-Type: application/octet-stream
+
+/vendor/*
+  Cache-Control: public, max-age=2592000
+
+/brand/*
+  Cache-Control: public, max-age=2592000

@@ -63,7 +63,7 @@ APP_DIR = Path(__file__).parent
 # ----------------------------------------------------------------
 # Identidade visual Pirajá — paleta "Mata, barro e papel"
 # ----------------------------------------------------------------
-BRAND_DIR = APP_DIR / "brand"
+BRAND_DIR = APP_DIR / "site" / "brand"  # pasta compartilhada com a versão web (site/)
 LOGO_PDF_PATH = BRAND_DIR / "piraja-entero-cor.png"        # cabeçalho do PDF
 FAVICON_PATH = BRAND_DIR / "piraja-favicon.png"             # ícone da aba do navegador
 LOGO_SIDEBAR_SVG = BRAND_DIR / "piraja-entero-negativo.svg" # sidebar (fundo verde-mata)
