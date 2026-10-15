@@ -117,7 +117,7 @@ export async function montarPainelMapa(raiz, metrics, aoGerarFigura) {
     if (!r.ok) { saida.innerHTML = h + alerta("info", esc(r.erro)); return; }
     const svg = figuraEstatica(r.cena);
     h += `<div class="pj-mapa"></div>` +
-      `<div class="pj-legenda" style="margin-top:8px">Figura para artigo (300 dpi), com rosa dos ventos, escala, grade de coordenadas, mapa de localização, legenda e fonte. Ela também entra no relatório em PDF.</div>` +
+      `<div class="pj-legenda" style="margin-top:8px">Figura para artigo (300 dpi), com seta do norte, escala, grade de coordenadas, mapa de localização, legenda e fonte. Ela também entra no relatório em PDF.</div>` +
       `<details class="pj-exp"><summary>Ver a figura para artigo</summary><div class="corpo pj-figura"><div class="pj-carregando">Preparando a figura…</div></div></details>` +
       `<div class="pj-btns"><button class="pj-btn" type="button" data-mapa="png" disabled>${icones.baixar("#F4F1EA", "#F4F1EA")} Figura PNG (300 dpi)</button>` +
       `<button class="pj-btn" type="button" data-mapa="tiff" disabled>${icones.baixar("#F4F1EA", "#F4F1EA")} Figura TIFF (300 dpi)</button></div>`;

@@ -113,12 +113,23 @@ function grade(ax) {
   return s;
 }
 
+/** Seta do norte no padrão cartográfico: ponta dividida (metade cheia, metade vazada)
+ * com halo branco, para continuar legível sobre qualquer cor do mapa. A figura usa
+ * coordenadas geográficas (meridianos verticais), então o norte verdadeiro é para cima. */
+export function setaNorte(x, yTopo, alt) {
+  const hw = 0.3 * alt, notch = 0.26 * alt, yb = yTopo + alt, yn = yb - notch;
+  const f = (v) => v.toFixed(1);
+  const contorno = `M${f(x)} ${f(yTopo)}L${f(x - hw)} ${f(yb)}L${f(x)} ${f(yn)}L${f(x + hw)} ${f(yb)}Z`;
+  const lw = Math.max(0.7, alt * 0.035);
+  return `<path d="${contorno}" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="${f(lw * 4)}" stroke-linejoin="round"/>` +
+    `<path d="M${f(x)} ${f(yTopo)}L${f(x - hw)} ${f(yb)}L${f(x)} ${f(yn)}Z" fill="${TINTA}"/>` +
+    `<path d="${contorno}" fill="none" stroke="${TINTA}" stroke-width="${f(lw)}" stroke-linejoin="round"/>`;
+}
+
 function norte(ax, fx = 0.93, fy = 0.86, t = 0.07) {
   const x = ax.x + fx * ax.w, yb = ax.y + (1 - fy) * ax.h, yt = ax.y + (1 - fy - t) * ax.h;
-  const hl = 9 * PT, hw = 4.5 * PT;
-  return `<line x1="${x.toFixed(1)}" y1="${yb.toFixed(1)}" x2="${x.toFixed(1)}" y2="${(yt + hl).toFixed(1)}" stroke="${TINTA}" stroke-width="${1.4 * PT}"/>` +
-    `<path d="M${x.toFixed(1)} ${yt.toFixed(1)}L${(x - hw).toFixed(1)} ${(yt + hl).toFixed(1)}L${(x + hw).toFixed(1)} ${(yt + hl).toFixed(1)}Z" fill="${TINTA}"/>` +
-    texto(x, ax.y + (1 - fy - t - 0.012) * ax.h, "N", { tam: 11, anc: "middle" });
+  return setaNorte(x, yt, yb - yt) +
+    texto(x, yt - 3 * PT, "N", { tam: 11, anc: "middle", peso: 600, halo: 2.5 * PT });
 }
 
 function escala(ax, lat, fx = 0.05, fy = 0.05) {
@@ -660,8 +671,8 @@ export function mapaInterativo(el, cena) {
       }
     }
     // norte, coordenadas e legenda
-    s += `<text x="${larg - 26}" y="26" font-size="15" font-weight="600" fill="${TINTA}" text-anchor="middle">N</text>` +
-      `<path d="M${larg - 26} 32l6 14h-12z" fill="${TINTA}"/>`;
+    s += `<text x="${larg - 26}" y="24" font-size="14" font-weight="600" fill="${TINTA}" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round" paint-order="stroke">N</text>` +
+      setaNorte(larg - 26, 30, 18);
     const passo = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10].find((p) => (v[2] - v[0]) / p <= 7) || 10;
     const cas = passo < 0.1 ? 2 : passo < 1 ? 1 : 0;
     for (let x = Math.ceil(v[0] / passo) * passo; x < v[2]; x += passo) {

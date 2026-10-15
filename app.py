@@ -759,7 +759,7 @@ def painel_mapa(metrics: dict):
     tif = mapas.figura_bytes(r["fig_estatica"], "tiff", 300)
     mapas.plt.close(r["fig_estatica"])
     st.session_state["mapa_pdf"] = (r["titulo"], png)
-    st.caption("Figura para artigo (300 dpi), com rosa dos ventos, escala, grade de coordenadas, mapa de "
+    st.caption("Figura para artigo (300 dpi), com seta do norte, escala, grade de coordenadas, mapa de "
                "localização, legenda e fonte. Ela também entra no relatório em PDF.")
     with st.expander("Ver a figura para artigo"):
         st.image(png, width="stretch")
