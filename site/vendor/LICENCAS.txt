@@ -1,0 +1,11 @@
+Bibliotecas de terceiros incluídas nesta pasta (servidas pelo próprio site,
+sem depender de CDN externo):
+
+  exceljs 4.4.0          MIT          https://github.com/exceljs/exceljs
+  pdfmake 0.2.20         MIT          https://github.com/bpampuch/pdfmake
+  xlsx (SheetJS) 0.18.5  Apache-2.0   https://github.com/SheetJS/sheetjs   (só para ler .xls antigo)
+  shpjs 6.1.0            MIT          https://github.com/calvinmetcalf/shapefile-js  (shapefile .zip)
+  proj4 2.15.0           MIT          https://github.com/proj4js/proj4js
+  polylabel 2.0.1        ISC          https://github.com/mapbox/polylabel  (com tinyqueue 3.0.0, ISC)
+
+Fontes (pasta brand/fonts): Fraunces e Instrument Sans, SIL Open Font License 1.1.

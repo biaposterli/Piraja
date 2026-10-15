@@ -49,7 +49,7 @@ MPL_CATEGORIA = {"Patogênico": MPL_BRICK, "Comensal": MPL_TEAL, "Não classific
 # Fraunces (títulos e números) e Instrument Sans (texto), ambas sob licença
 # SIL OFL, embutidas a partir de brand/fonts. Se os arquivos não estiverem
 # presentes, o relatório cai para Times/Helvetica sem quebrar.
-_FONT_DIR = Path(__file__).parent / "brand" / "fonts"
+_FONT_DIR = Path(__file__).parent / "site" / "brand" / "fonts"
 FONT_TITLE = "Times-Bold"
 FONT_BODY = "Helvetica"
 FONT_BODY_BOLD = "Helvetica-Bold"

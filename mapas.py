@@ -36,8 +36,8 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import BoundaryNorm, ListedColormap
 from matplotlib.patches import Patch, Rectangle
 
-GEO_DIR = Path(__file__).parent / "geo"
-FONT_DIR = Path(__file__).parent / "brand" / "fonts"
+GEO_DIR = Path(__file__).parent / "site" / "geo"  # pasta compartilhada com a versão web (site/)
+FONT_DIR = Path(__file__).parent / "site" / "brand" / "fonts"
 CRS = "EPSG:4674"  # SIRGAS 2000
 
 TINTA, TINTA_SUAVE, MATA, COBRE = "#1B2421", "#4E5B55", "#11483D", "#9C4A2F"

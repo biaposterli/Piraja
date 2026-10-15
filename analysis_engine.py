@@ -323,7 +323,9 @@ def max_coletas(df: pd.DataFrame) -> int:
     """Maior número de coleta (Pn) presente na planilha — 0 se nenhuma."""
     if "coleta" not in df.columns:
         return 0
-    ranks = [r for r in df["coleta"].apply(coleta_rank) if r is not None]
+    # (Series.apply transforma os None em NaN; sem filtrar o NaN, max() podia
+    # devolver NaN quando a 1ª coleta não tinha rótulo Pn — e o app quebrava)
+    ranks = [int(r) for r in df["coleta"].apply(coleta_rank) if r is not None and not pd.isna(r)]
     return max(ranks) if ranks else 0
 
 # Reconhece uma abreviação de gênero no início do token: uma letra, opcional
