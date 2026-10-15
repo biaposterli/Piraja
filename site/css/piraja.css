@@ -220,6 +220,8 @@ details.pj-exp > .corpo { padding: 4px 14px 14px; }
 .pj-realizacao { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; padding: 4px 0 18px; margin-bottom: 16px; border-bottom: 1px solid var(--linha); }
 .pj-realizacao .logos { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
 .pj-realizacao img { display: block; height: 90px; width: auto; }
+.pj-realizacao img.ufrn { height: 54px; }
+@media (max-width: 560px) { .pj-realizacao img { height: 72px; } .pj-realizacao img.ufrn { height: 44px; } }
 
 /* aviso flutuante */
 .pj-toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--tinta); color: var(--papel); padding: 10px 16px;
