@@ -8,7 +8,7 @@ Mapas de prevalência por território (moradia do paciente) — Pirajá.
     com divisão oficial em bairros). Alternativa: arquivo de limites enviado
     por quem usa (GeoJSON ou shapefile .zip), por exemplo o da prefeitura.
 
-Dois produtos: uma figura no padrão cartográfico (matplotlib — rosa dos ventos,
+Dois produtos: uma figura no padrão cartográfico (matplotlib — seta do norte,
 escala, grade de coordenadas, mapa de localização, legenda em classes, fonte)
 para artigo/PDF, e uma versão interativa (plotly, só SVG — não depende de
 servidor de mapas externo).
@@ -34,7 +34,7 @@ import matplotlib.font_manager as fm
 import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 from matplotlib.colors import BoundaryNorm, ListedColormap
-from matplotlib.patches import Patch, Rectangle
+from matplotlib.patches import Patch, Polygon, Rectangle
 
 GEO_DIR = Path(__file__).parent / "site" / "geo"  # pasta compartilhada com a versão web (site/)
 FONT_DIR = Path(__file__).parent / "site" / "brand" / "fonts"
@@ -453,10 +453,26 @@ def _grade(ax):
 
 
 def _norte(ax, x=0.93, y=0.86, tam=0.07):
-    ax.annotate("", xy=(x, y + tam), xytext=(x, y), xycoords="axes fraction",
-                arrowprops=dict(arrowstyle="-|>,head_width=0.45,head_length=0.9", color=TINTA, lw=1.4))
-    ax.text(x, y + tam + 0.012, "N", transform=ax.transAxes, ha="center", va="bottom",
-            fontsize=11, color=TINTA)
+    """Seta do norte no padrão cartográfico: ponta dividida (metade cheia, metade
+    vazada) com halo branco, legível sobre qualquer cor do mapa. A figura usa
+    coordenadas geográficas (meridianos verticais), então o norte verdadeiro é para cima."""
+    ax.apply_aspect()
+    fw, fh = ax.figure.get_size_inches()
+    pos = ax.get_position()
+    razao = (pos.height * fh) / (pos.width * fw)  # converte largura para fração do eixo x
+    hw, notch = 0.3 * tam * razao, 0.26 * tam
+    topo, base, meio = y + tam, y, y + notch
+    contorno = [(x, topo), (x - hw, base), (x, meio), (x + hw, base)]
+    lw = 0.9
+    ax.add_patch(Polygon(contorno, closed=True, transform=ax.transAxes, facecolor="white",
+                         edgecolor="white", lw=lw * 4, joinstyle="round", zorder=20, clip_on=False))
+    ax.add_patch(Polygon([(x, topo), (x - hw, base), (x, meio)], closed=True, transform=ax.transAxes,
+                         facecolor=TINTA, edgecolor="none", zorder=21, clip_on=False))
+    ax.add_patch(Polygon(contorno, closed=True, transform=ax.transAxes, facecolor="none",
+                         edgecolor=TINTA, lw=lw, joinstyle="round", zorder=22, clip_on=False))
+    ax.text(x, topo + 0.008, "N", transform=ax.transAxes, ha="center", va="bottom", fontsize=11,
+            fontweight="semibold", color=TINTA, zorder=22,
+            path_effects=[pe.withStroke(linewidth=2.5, foreground="white")])
 
 
 def _escala(ax, lat, x=0.05, y=0.05):
