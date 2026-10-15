@@ -54,7 +54,9 @@ import ilustracoes
 # O Streamlit Cloud atualiza os arquivos a cada push, mas mantém na memória
 # módulos já importados; se o mapas.py em memória for de uma versão anterior,
 # recarrega para não quebrar com funções novas.
-if not hasattr(mapas, "opcoes_recorte"):
+# Também recarrega se a versão em memória ainda aponta para a pasta geo/ antiga
+# (as malhas foram movidas para site/geo, compartilhadas com a versão web).
+if not hasattr(mapas, "opcoes_recorte") or not Path(mapas.GEO_DIR).exists():
     import importlib
     mapas = importlib.reload(mapas)
 
