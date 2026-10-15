@@ -1,0 +1,10 @@
+// Configuração para o Cloudflare (fluxo "Workers" com arquivos estáticos).
+// O site é só a pasta site/ — não há build nem código de servidor.
+{
+  "name": "piraja",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": "./site",
+    "not_found_handling": "404-page"
+  }
+}

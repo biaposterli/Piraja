@@ -30,6 +30,20 @@ python3 -m http.server 8000
 e abrir <http://localhost:8000>. (Abrir o `index.html` direto com duplo clique não
 funciona: o navegador bloqueia os módulos JavaScript fora de um servidor.)
 
+## Antes de tudo: o site precisa estar na branch `main`
+
+O Cloudflare publica a branch `main`. Enquanto o pull request com a pasta `site/`
+não for aceito (*merge*), a `main` não tem o site e a implantação falha.
+
+## Publicar no Cloudflare — fluxo "Workers" (o padrão atual do painel)
+
+1. **Workers & Pages → Create → Import a repository** e escolha **Piraja**.
+2. Deixe os campos assim (o arquivo `wrangler.jsonc` na raiz já diz ao Cloudflare
+   que o site é a pasta `site/`):
+   - **Build command:** deixe em branco
+   - **Deploy command:** `npx wrangler deploy`
+3. **Deploy.** O endereço fica `piraja.<sua-conta>.workers.dev`.
+
 ## Publicar no Cloudflare Pages (endereço gratuito `*.pages.dev`)
 
 1. No painel do Cloudflare: **Workers & Pages → Create application → Pages →
