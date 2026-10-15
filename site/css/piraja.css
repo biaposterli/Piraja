@@ -40,6 +40,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .pj-barra .pj-btn:hover { background: var(--cobre-claro); border-color: var(--cobre-claro); color: var(--tinta); }
 .pj-barra .privado { display: flex; gap: 8px; align-items: flex-start; background: rgba(244, 241, 234, .08); border-radius: 10px; padding: 10px 12px; }
 .pj-barra .privado svg { flex: 0 0 auto; margin-top: 2px; }
+.pj-barra-parceiros { background: var(--papel); border-radius: 10px; padding: 10px 14px 12px; }
+.pj-barra-parceiros span { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--cobre); margin-bottom: 6px; }
+.pj-barra-parceiros div { display: flex; align-items: center; gap: 16px; }
+.pj-barra-parceiros img { display: block; height: 50px; width: auto; }
+.pj-barra-parceiros img + img { height: 33px; }
 .pj-menu { display: none; }
 
 /* ------------------------------------------------------------- área principal */

@@ -5,7 +5,7 @@
 import { carregarScript } from "./tabela.js";
 import { COR, graficoEspecies, graficoTodos, colunas, rosca, linha } from "./graficos.js";
 import { pivotMetodoEspecie, npRound1 } from "./relatorio.js";
-import { agoraTexto, LOGO_PNG } from "./planilhas.js";
+import { agoraTexto, LOGO_PNG, LOGOS_PARCEIROS } from "./planilhas.js";
 import { CATEGORIAS_AMOSTRAGEM } from "./engine.js";
 
 const MM = 72 / 25.4;
@@ -185,6 +185,8 @@ export async function gerarPdf(m, { mapa = null } = {}) {
   const { pdfMake, vfs } = await prepararPdfMake();
   let logo = null;
   try { logo = "data:image/png;base64," + base64(await binario(LOGO_PNG)); } catch { logo = null; }
+  let parceiros = null; // LaPaHV + UFRN, sempre juntos
+  try { parceiros = await Promise.all(LOGOS_PARCEIROS.map(async (c) => "data:image/png;base64," + base64(await binario(c)))); } catch { parceiros = null; }
   const nomes = m.metodos_ativos_nomes.length ? m.metodos_ativos_nomes : m.metodos_resumo.map((r) => r.metodo);
   const c = [];
 
@@ -192,8 +194,18 @@ export async function gerarPdf(m, { mapa = null } = {}) {
   c.push({
     columns: [
       logo ? { image: logo, width: 44 * MM } : { text: "Pirajá", style: "title" },
-      { stack: [{ text: "Relatório de análise epidemiológica", style: "meta" }, { text: `Gerado em ${agoraTexto()}`, style: "meta" }],
-        alignment: "right", margin: [0, 18, 0, 0] },
+      {
+        width: "*",
+        stack: [
+          ...(parceiros ? [{
+            columns: [{ text: "", width: "*" },
+              { image: parceiros[0], fit: [13 * MM, 16 * MM], width: 13 * MM },
+              { image: parceiros[1], fit: [30 * MM, 9.6 * MM], width: 30 * MM, margin: [4 * MM, 3.4 * MM, 0, 0] }],
+            margin: [0, 0, 0, 2 * MM],
+          }] : [{ text: "", margin: [0, 18, 0, 0] }]),
+          { text: `Relatório de análise epidemiológica · gerado em ${agoraTexto()}`, style: "meta", alignment: "right" },
+        ],
+      },
     ],
   });
   c.push(esp(3), regua(1.4, TEAL_DARK), esp(5));

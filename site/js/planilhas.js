@@ -134,7 +134,7 @@ function colunasPorNome(ws, linha = 1) {
 }
 
 // ---------------------------------------------------------------- estilos por aba (estilo_planilha.py)
-async function leiaMe(wb, ws, texto, logo) {
+async function leiaMe(wb, ws, texto, logo, parceiros = null) {
   ws.views = [{ showGridLines: false, zoomScale: 110 }];
   larguras(ws, { A: 3, B: 110 });
   let linha = 2;
@@ -144,6 +144,8 @@ async function leiaMe(wb, ws, texto, logo) {
     ws.getRow(2).height = 50;
     linha = 5;
   }
+  colocarParceiros(wb, ws, parceiros, 1, logo ? Math.round(62 * logo.w / logo.h) + 40 : 0);
+  if (parceiros && !logo) { ws.getRow(2).height = 50; linha = 5; }
   const t = ws.getCell(linha, 2);
   t.value = "Modelo de planilha — levantamento de parasitoses intestinais";
   t.font = fonte({ name: SERIFA, size: 20, bold: true, color: MATA });
@@ -270,13 +272,34 @@ function config(ws, nome) {
   ws.properties.tabColor = { argb: argb(FOLHA) };
 }
 
-async function logoInfo() {
+// logos de realização (LaPaHV + UFRN), sempre juntos
+export const LOGOS_PARCEIROS = ["brand/parceiros/lapahv.png", "brand/parceiros/ufrn.png"];
+
+async function logoInfo(caminho = LOGO_PNG) {
   try {
-    const buf = await lerBinario(LOGO_PNG);
+    const buf = await lerBinario(caminho);
     // dimensões do PNG (cabeçalho IHDR)
     const dv = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
     return { buf, w: dv.getUint32(16), h: dv.getUint32(20) };
   } catch { return null; }
+}
+
+async function parceirosInfo() {
+  const l = await Promise.all(LOGOS_PARCEIROS.map((c) => logoInfo(c)));
+  return l.every(Boolean) ? l : null;
+}
+
+/** Logos LaPaHV + UFRN lado a lado, na coluna `col` (0 = A), deslocados `xPx` px da borda dela. */
+const EMU = 9525; // por pixel
+function colocarParceiros(wb, ws, parceiros, col, xPx) {
+  if (!parceiros) return;
+  const [lap, ufrn] = parceiros;
+  const hLap = 62, hUfrn = 30;
+  const wLap = Math.round(hLap * lap.w / lap.h), wUfrn = Math.round(hUfrn * ufrn.w / ufrn.h);
+  const ancora = (x, y) => ({ nativeCol: col, nativeColOff: Math.round(x * EMU), nativeRow: 1, nativeRowOff: Math.round(y * EMU) });
+  ws.addImage(wb.addImage({ buffer: lap.buf, extension: "png" }), { tl: ancora(xPx, 0), ext: { width: wLap, height: hLap } });
+  // a UFRN fica à direita, centrada na altura do LaPaHV
+  ws.addImage(wb.addImage({ buffer: ufrn.buf, extension: "png" }), { tl: ancora(xPx + wLap + 16, (hLap - hUfrn) / 2), ext: { width: wUfrn, height: hUfrn } });
 }
 
 async function paraBytes(wb) {
@@ -394,7 +417,7 @@ export async function gerarModelo() {
   const wb = new ExcelJS.Workbook();
   wb.creator = "Pirajá";
   const logo = await logoInfo();
-  const wsL = wb.addWorksheet("Leia-me"); preparar(wsL); await leiaMe(wb, wsL, LEIA_ME, logo);
+  const wsL = wb.addWorksheet("Leia-me"); preparar(wsL); await leiaMe(wb, wsL, LEIA_ME, logo, await parceirosInfo());
   const wsD = wb.addWorksheet("Dados"); preparar(wsD); escrever(wsD, exemplo); dados(wsD, new Set(colLamina));
   const wsG = wb.addWorksheet("Legenda"); preparar(wsG); escrever(wsG, leg); legenda(wsG);
   const wsE = wb.addWorksheet("Especies_Reconhecidas"); preparar(wsE);
@@ -569,7 +592,7 @@ function tabelaRelatorio(ws) {
 }
 
 /** Capa com sumário (links para cada aba). ws já criada como 1ª aba; outras = nomes das demais. */
-function capa(wb, ws, outras, logo, geradoEm, resumo) {
+function capa(wb, ws, outras, logo, geradoEm, resumo, parceiros = null) {
   ws.views = [{ showGridLines: false, zoomScale: 110 }];
   larguras(ws, { A: 3, B: 34, C: 90 });
   let linha = 2;
@@ -579,6 +602,8 @@ function capa(wb, ws, outras, logo, geradoEm, resumo) {
     ws.getRow(2).height = 50;
     linha = 5;
   }
+  colocarParceiros(wb, ws, parceiros, 1, logo ? Math.round(62 * logo.w / logo.h) + 40 : 0);
+  if (parceiros && !logo) { ws.getRow(2).height = 50; linha = 5; }
   const t = ws.getCell(linha, 2);
   t.value = "Relatório de análise epidemiológica";
   t.font = fonte({ name: SERIFA, size: 22, bold: true, color: MATA });
@@ -635,6 +660,6 @@ export async function relatorioExcel(m, cfgEstado) {
   const nomes = m.metodos_ativos_nomes;
   const resumo = `${m.total} pacientes cadastrados · ${m.fecal.length} com amostra fecal entregue · ` +
     `${m.apenas_lamina.length} só com lâmina · métodos: ${nomes.length ? nomes.join(", ") : "—"}.`;
-  capa(wb, wsCapa, abas.map(([n]) => n), await logoInfo(), `Gerado em ${agoraTexto()}`, resumo);
+  capa(wb, wsCapa, abas.map(([n]) => n), await logoInfo(), `Gerado em ${agoraTexto()}`, resumo, await parceirosInfo());
   return paraBytes(wb);
 }
