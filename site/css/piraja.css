@@ -230,9 +230,18 @@ details.pj-exp > .corpo { padding: 4px 14px 14px; }
   .pj-cols.c32, .pj-cols.c23, .pj-cols.c3 { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 900px) {
-  .pj-barra { transform: translateX(-100%); transition: transform .2s; box-shadow: 0 0 40px rgba(0, 0, 0, .3); }
+  /* no celular a barra lateral abre por cima da página; o topo fica livre para o
+     botão Menu/Fechar não cobrir a logo */
+  .pj-barra { transform: translateX(-100%); transition: transform .2s; box-shadow: 0 0 40px rgba(0, 0, 0, .3);
+    width: min(var(--barra), 86vw); padding-top: 72px; }
+  body.menu-aberto .pj-menu { background: var(--papel); color: var(--mata); box-shadow: none; }
+  /* faixa fixa atrás do botão: ao rolar, o conteúdo passa por baixo dela */
+  body::before { content: ""; position: fixed; inset: 0 0 auto 0; height: 60px; background: rgba(244, 241, 234, .94);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-bottom: 1px solid var(--linha); z-index: 25; }
+  .pj-main { scroll-padding-top: 70px; }
   body.menu-aberto .pj-barra { transform: none; }
-  .pj-main { margin-left: 0; padding-top: 64px; }
+  .pj-main { margin-left: 0; padding-top: 76px; }
+  html { scroll-padding-top: 70px; }
   .pj-menu { display: inline-flex; position: fixed; top: 12px; left: 12px; z-index: 40; background: var(--mata); color: var(--papel); border: 0;
     border-radius: 8px; padding: 8px 12px; font-weight: 600; gap: 8px; align-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 0, 0, .15); }
   .pj-cols.c2 { grid-template-columns: minmax(0, 1fr); }

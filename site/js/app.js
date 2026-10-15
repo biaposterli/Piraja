@@ -140,6 +140,7 @@ async function aoClicar(e) {
   if (acao === "menu") {
     const aberto = document.body.classList.toggle("menu-aberto");
     el.setAttribute("aria-expanded", String(aberto));
+    el.textContent = aberto ? "✕ Fechar" : "☰ Menu";
   } else if (acao === "baixar-modelo") {
     await comBotao(el, async () => {
       const { gerarModelo } = await import("./planilhas.js");
@@ -184,7 +185,8 @@ async function aoClicar(e) {
 
 function fecharMenu() {
   document.body.classList.remove("menu-aberto");
-  $(".pj-menu")?.setAttribute("aria-expanded", "false");
+  const btn = $(".pj-menu");
+  if (btn) { btn.setAttribute("aria-expanded", "false"); btn.textContent = "☰ Menu"; }
 }
 
 function aoMudar(e) {
